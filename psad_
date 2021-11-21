@@ -1,0 +1,95 @@
+#!/usr/bin/sh
+#  -*- sh -*-
+
+: << =cut
+
+=head1 NAME
+
+psad_ - Wildcard plugin to monitor count of banned IPs via psad (https://cipherdyne.org/psad/)
+
+=head1 CONFIGURATION
+
+This is a wildcard plugin.  The link name extension is the type of monitoring.
+
+Example:
+
+ ln -s /usr/share/munin/plugins/psad_ /etc/munin/plugins/psad_banned
+ 
+ Currently supports only this type of monitoring.
+ 
+ This plugin must run with root privileges.
+ 
+ For example, this or another plugins config file /etc/munin/plugin-conf.d/00-default must contain:
+ 
+ [psad_*]
+  user root
+
+Optionally, you can specify the path to the psad log file.
+
+ [psad_*]
+  user root
+  env.psad_log_file /var/log/psad/auto_blocked_iptables
+  
+  
+=head1 AUTHOR
+
+Unknown
+
+=head1 LICENSE
+
+GPLv3
+
+=head1 MAGIC MARKERS
+
+ #%# family=auto
+ #%# capabilities=autoconf
+
+=cut
+
+. "$MUNIN_LIBDIR/plugins/plugin.sh"
+
+
+function banned {
+    cut -f1 -d' ' "$ABI"|wc -l
+}
+
+
+if [ -r "$psad_log_file" ];then
+    ABI="$psad_log_file"
+else
+    ABI="/var/log/psad/auto_blocked_iptables"
+fi
+
+if [ "$1" = "autoconf" ]; then
+	if [ -r "$ABI" ]; then
+		echo yes
+		exit 0
+	else
+		echo no
+		exit 0
+	fi
+fi
+
+if [ "$1" = "config" ]; then
+	echo 'graph_title psad - Count of blacklisted IPs'
+	echo 'graph_args --base 1000 -l 0'
+	echo 'graph_vlabel Count'
+	echo 'graph_scale no'
+	echo 'graph_category security'
+	echo 'graph_info This graph shows count of blacklisted IPs by psad.'
+	echo 'bl.label IPs'
+	echo 'bl.info This graph shows count of blacklisted IPs by psad.'
+	exit 0
+fi
+
+FUNC=$(echo "$0" | cut -d _ -f 2-)
+
+echo -n "bl.value "
+
+case "$FUNC" in
+        
+        banned)
+            banned
+        ;;
+esac
+
