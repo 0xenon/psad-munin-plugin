@@ -33,7 +33,7 @@ Optionally, you can specify the path to the psad log file.
   
 =head1 AUTHOR
 
-Unknown
+Copyright (C) 2021 David Schweiner 
 
 =head1 LICENSE
 
@@ -50,7 +50,7 @@ GPLv3
 
 
 function banned {
-    cut -f1 -d' ' "$ABI"|wc -l
+    grep -oE '((1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])' "$ABI" | wc -l
 }
 
 
@@ -63,11 +63,10 @@ fi
 if [ "$1" = "autoconf" ]; then
 	if [ -r "$ABI" ]; then
 		echo yes
-		exit 0
 	else
 		echo no
-		exit 0
 	fi
+    exit 0
 fi
 
 if [ "$1" = "config" ]; then
