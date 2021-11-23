@@ -24,3 +24,9 @@ Optionally, you can specify the path to the psad log file.
  [psad_*] <br/>
  user root <br/>
  env.psad_log_file /var/log/psad/auto_blocked_iptables
+
+
+Known issues:
+
+Known issues:
+- [ ] works only with IPv4 addresses
