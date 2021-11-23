@@ -27,6 +27,4 @@ Optionally, you can specify the path to the psad log file.
 
 
 Known issues:
-
-Known issues:
 - [ ] works only with IPv4 addresses
