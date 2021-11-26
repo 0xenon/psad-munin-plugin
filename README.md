@@ -1,6 +1,8 @@
 # psad-munin-plugin
 Wildcard plugin for Munin to monitor count of banned IPs via psad (https://cipherdyne.org/psad/)
 
+![graph preview](https://github.com/0xenon/psad-munin-plugin/blob/main/graph.png)
+
 ## CONFIGURATION
 
 This is a wildcard plugin.  The symlink name extension is the type of monitoring.
