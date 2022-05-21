@@ -50,13 +50,38 @@ GPLv3
 
 =cut
 
-. "$MUNIN_LIBDIR/plugins/plugin.sh"
+#. "$MUNIN_LIBDIR/plugins/plugin.sh"
 
 
-function banned {
-    grep -oE '((1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])' "$ABI" | wc -l
+function banned () {
+	echo -n "bl.value "
+	#grep -oE '((1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])' "$ABI" | wc -l
+	grep -oE " REG_IPv4 $ABI" | wc -l
 }
 
+function get_ips_name_dirs () {
+		for d in $1/*/ ; do
+			IPs=$(echo $d | grep -E "$REG_IPv4")
+			echo $IPs
+	done
+
+}
+function levels () {
+	DIRS=$(get_ips_name_dirs $(dirname "$ABI"))
+	LEVELS=(0 0 0 0 0)
+	for d in  $DIRS
+	do
+		n=$(head -n1 "$d""danger_level")
+		LEVELS[(($n-1))]=$((LEVELS[(($n-1))]+1))
+	done
+	
+	v=1
+	for n in ${LEVELS[@]}
+	do
+		echo "level""$v.value $n"
+		v=$(($v+1))
+	done
+}
 
 if [ -r "$psad_log_file" ];then
     ABI="$psad_log_file"
@@ -69,11 +94,15 @@ if [ "$1" = "autoconf" ]; then
 		echo yes
 	else
 		echo no
+		exit -1
 	fi
     exit 0
 fi
 
-if [ "$1" = "config" ]; then
+FUNC=$(echo "$0" | cut -d _ -f 2-)
+REG_IPv4="((1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])\.){3}(1?[0-9][0-9]?|2[0-4][0-9]|25[0-5])"
+
+if [ "$1" = "config" ] && [ "$FUNC" = "banned" ]; then
 	echo 'graph_title psad - Count of blacklisted IPs'
 	echo 'graph_args --base 1000 -l 0'
 	echo 'graph_vlabel Count'
@@ -83,16 +112,45 @@ if [ "$1" = "config" ]; then
 	echo 'bl.label IPs'
 	echo 'bl.info This graph shows count of blacklisted IPs by psad.'
 	exit 0
+elif [ "$1" = "config" ] && [ $FUNC = "levels" ]; then
+	for i in  {1..5}
+	do
+		echo 'graph_title psad - Count of abuse IPs by levels'
+#		echo 'graph_order low high locked'
+		echo 'graph_category security'
+		echo 'graph_info This graph shows count of abuse IPs levels by psad'
+		echo 'graph_args --base 1000 -l 0'
+		echo 'graph_vlabel Count'
+		echo "level$i.draw AREA"
+#		echo 'high.label high priority'
+#		echo "level$i.draw STACK"
+		echo "level$i.label level $i"
+#		echo 'high.info The number of high-priority processes (tasks)'
+#		echo 'low.label low priority'
+#		echo 'low.draw AREA'
+#		echo 'low.info The number of low-priority processes (tasks)'
+#		echo 'locked.label locked in memory'
+#		echo 'locked.draw STACK'
+#		echo 'locked.info The number of processes that have pages locked into memory (for real-time and custom IO)'
+
+#		echo 'type DERIVE'
+#		echo 'graph_title 
+#		echo 'graph_args --base 1000 -l 0'
+#		echo 'graph_vlabel '
+#		echo 'graph_scale no'
+#		echo 'graph_category '
+#		echo 'graph_info '
+#		echo "level$i.label level $i"
+#		#echo 'level.info This graph shows count of abuse IPs levels by psad.'
+	done
+	exit 0
 fi
 
-FUNC=$(echo "$0" | cut -d _ -f 2-)
-
-echo -n "bl.value "
-
 case "$FUNC" in
-        
         banned)
             banned
         ;;
+		levels)
+			levels
 esac
 
