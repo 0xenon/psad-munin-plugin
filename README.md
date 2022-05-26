@@ -5,13 +5,13 @@ Wildcard plugin for Munin to monitor count of banned IPs via psad (https://ciphe
 
 ## CONFIGURATION
 
-This is a wildcard plugin.  The symlink name extension is the type of monitoring.
+This is a wildcard plugin.
+The possible wildcard values are the follwing: banned, levels
 
 ### Example:
 
  **ln -s /usr/share/munin/plugins/psad_ /etc/munin/plugins/psad_banned**
-
- Currently supports only this type of monitoring.
+ **ln -s /usr/share/munin/plugins/psad_ /etc/munin/plugins/psad_levels**
 
  This plugin must run with root privileges.
 
