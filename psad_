@@ -69,7 +69,6 @@ function get_ips_from_dir_path () {
 function levels () {
 	local ALL_IPs=$(get_ips_from_dir_path "$BASE_PATH")
 	local LEVELS=(0 0 0 0 0)
-	echo $BASE_PATH/auto_blocked_iptables
 	for ip in  $ALL_IPs
 	do
 		grep -m1 $ip $BASE_PATH/auto_blocked_iptables > /dev/null
