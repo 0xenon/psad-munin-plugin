@@ -10,7 +10,7 @@ The possible wildcard values are the follwing: banned, levels
 
 ### Example:
 
- **ln -s /usr/share/munin/plugins/psad_ /etc/munin/plugins/psad_banned**
+ **ln -s /usr/share/munin/plugins/psad_ /etc/munin/plugins/psad_banned**<br/>
  **ln -s /usr/share/munin/plugins/psad_ /etc/munin/plugins/psad_levels**
 
  This plugin must run with root privileges.
