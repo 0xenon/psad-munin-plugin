@@ -125,7 +125,6 @@ elif [ "$1" = "config" ] && [ $FUNC = "levels" ]; then
 		echo 'graph_info This graph shows count of blocked IPs danger level by psad'
 		echo 'graph_args --base 1000 -l 0'
 		echo 'graph_vlabel Count'
-		#echo "level$i.draw AREA"
 		echo "level$i.label level $i"
 	done
 	exit 0
