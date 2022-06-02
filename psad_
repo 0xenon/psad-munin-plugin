@@ -59,25 +59,29 @@ function banned () {
 	grep -oE "$REG_IPv4" "$ABI" | wc -l
 }
 
-function get_ips_from_dir_path () {
-	declare -a IPs=()
+function get_ips_from_dir_path {
+	declare -A IPs
 	for d in $1/*/ ; do
-		 IPs+=($(echo $d | grep -oE $REG_IPv4))
+		ip=$(echo $d | grep -oE $REG_IPv4)
+		[ -z "$ip" ] && continue
+		IPs+=([$ip]=0)
 	done
 	echo ${IPs[*]}
 }
+
 function levels () {
 	local ALL_IPs=$(get_ips_from_dir_path "$BASE_PATH")
 	local LEVELS=(0 0 0 0 0)
-	for ip in  $ALL_IPs
-	do
-		grep -m1 $ip $BASE_PATH/auto_blocked_iptables > /dev/null
-		if [ $? -eq 0 ]; then
+
+	while read line; do
+		ip=$(echo "$line" | cut -f1 -d' ')
+		if  ! [[ -z  $ALL_IPs[$ip]$ ]];then
 			n=$(head -n1 "$BASE_PATH/$ip/danger_level")
-			LEVELS[(($n-1))]=$((LEVELS[(($n-1))]+1))
+			n=$(($n-1))
+			LEVELS[(($n))]=$((LEVELS[(($n))]+1))
 		fi
-	done
-	
+	done <"$BASE_PATH/auto_blocked_iptables"
+
 	v=1
 	for n in ${LEVELS[@]}
 	do
