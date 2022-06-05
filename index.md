@@ -1,12 +1,12 @@
 ## plugin for munin that monitoring blocked IPs by psad
 Wildcard plugin for Munin to monitor count of banned IPs via psad (https://cipherdyne.org/psad/)
 
-![graph preview](https://github.com/0xenon/psad-munin-plugin/blob/main/graph.png)
+[graph preview](https://github.com/0xenon/psad-munin-plugin/blob/main/graph.png)
 
 ## CONFIGURATION
 
 This is a wildcard plugin.
-The possible wildcard values are the follwing: banned, levels
+The possible wildcard values are the following: banned, levels
 
 ### Example:
 
