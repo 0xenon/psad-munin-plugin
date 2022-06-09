@@ -24,7 +24,7 @@ user root
 Optionally, you can specify the path to the psad log file.
 ```
  [psad_*]
- user root <br/>
+ user root
  env.psad_log_file /var/log/psad/auto_blocked_iptables
 ```
 
