@@ -17,7 +17,7 @@ The possible wildcard values are the follwing: banned, levels
 
  For example, this or another plugins config file **/etc/munin/plugin-conf.d/00-default** must contain:
 ```
-[psad_\*]
+[psad_*]
 user root
 ```
 
